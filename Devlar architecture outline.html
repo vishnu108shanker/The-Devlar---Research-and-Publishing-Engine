@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Devlar architecture</title>
+<style>
+:root{--bg:#f3f1ec;--ink:#1d2330;--mute:#5b6372;--line:#c9c4b8;--prod:#2f5d62;--prodbg:#e1ece9;--web:#8a4b2f;--webbg:#f4e6dc;--db:#26324a;--dbbg:#dfe4ee;--card:#fffdf9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--ink:#e8e6e1;--mute:#9aa1ae;--line:#3a404c;--prod:#7fc1b8;--prodbg:#1b2a2b;--web:#e0a47f;--webbg:#2c211b;--db:#9fb3da;--dbbg:#1d2535;--card:#1b1f27}}
+:root[data-theme="dark"]{--bg:#14171d;--ink:#e8e6e1;--mute:#9aa1ae;--line:#3a404c;--prod:#7fc1b8;--prodbg:#1b2a2b;--web:#e0a47f;--webbg:#2c211b;--db:#9fb3da;--dbbg:#1d2535;--card:#1b1f27}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Iowan Old Style",serif;line-height:1.5}
+main{max-width:1040px;margin:0 auto;padding:28px 18px 48px}
+h1{font-size:1.7rem;margin:0 0 4px;font-weight:600}
+.sub{color:var(--mute);margin:0 0 24px;max-width:62ch}
+.grid{display:grid;grid-template-columns:1fr 150px 1fr;gap:14px;align-items:stretch}
+.side{border:2px solid;border-radius:6px;padding:14px}
+.prod{border-color:var(--prod);background:var(--prodbg)}
+.web{border-color:var(--web);background:var(--webbg)}
+.side>h2{margin:0 0 12px;font-size:1.05rem}
+.prod>h2{color:var(--prod)}.web>h2{color:var(--web)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:10px 12px;margin-bottom:10px}
+.box:last-child{margin-bottom:0}
+.box b{display:block;font-size:.95rem}
+.box span{color:var(--mute);font-size:.85rem}
+.mid{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:8px}
+.db{border:2px solid var(--db);background:var(--dbbg);color:var(--db);border-radius:6px;padding:14px 8px;font-weight:600;width:100%}
+.db small{display:block;font-weight:400;color:var(--mute);margin-top:4px;font-size:.78rem}
+.arrow{color:var(--mute);font-size:.8rem}
+.rules{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rules div{border:1px solid var(--line);border-radius:4px;padding:12px;background:var(--card);font-size:.9rem}
+.rules h3{margin:0 0 6px;font-size:.95rem}
+.rules ul{margin:0;padding-left:18px;color:var(--mute)}
+@media (max-width:760px){.grid{grid-template-columns:1fr}.mid{flex-direction:row;flex-wrap:wrap}.db{width:auto;flex:1}.rules{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<h1>The Devlar: system outline</h1>
+<p class="sub">A production side that writes, a website that reads, and Postgres as the only contract between them.</p>
+
+<div class="grid">
+  <section class="side prod">
+    <h2>Devlar production layer (Python + Node workers)</h2>
+    <div class="box"><b>Collectors, scrapers, deduplicators</b><span>Official blogs, releases, advisories, papers. Reused from DevByte ideas.</span></div>
+    <div class="box"><b>Research engine</b><span>Planner, evidence gathering, claim verification. Python, LangGraph, RAG, knowledge graph.</span></div>
+    <div class="box"><b>Editorial layer</b><span>Turns approved claims into an article in your reading style.</span></div>
+    <div class="box"><b>Quality gate and publishing engine</b><span>Moves an article to published only if checks pass, and records why.</span></div>
+  </section>
+
+  <div class="mid">
+    <div class="arrow">writes</div>
+    <div class="db">PostgreSQL<small>+ pgvector<br>runs, sources, claims, evidence, articles</small></div>
+    <div class="arrow">reads</div>
+  </div>
+
+  <section class="side web">
+    <h2>The Devlar website (PERN)</h2>
+    <div class="box"><b>React front end</b><span>Tech news feed, article reader, source and claim inspection.</span></div>
+    <div class="box"><b>Express + Node API</b><span>Auth, CORS, helmet, rate limits. Reads article content, writes user data.</span></div>
+    <div class="box"><b>Keyword explanation feature</b><span>Select a term, press Alt+D, get Naive, Standard or Expert. Calls Groq through Express.</span></div>
+    <div class="box"><b>ChatGPT / Claude handoff</b><span>Button that opens a chat with the article context and sources prefilled.</span></div>
+  </section>
+</div>
+
+<div class="rules">
+  <div><h3>Production writes</h3><ul><li>raw items, stories</li><li>research runs, sources, documents, chunks</li><li>claims, evidence, articles, status history</li></ul></div>
+  <div><h3>Website writes</h3><ul><li>users, saved articles, reading history</li><li>explain request logs</li><li>read-only on article content tables</li></ul></div>
+</div>
+</main>
+</body>
+</html>
