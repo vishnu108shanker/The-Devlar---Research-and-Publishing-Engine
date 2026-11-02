@@ -4,3 +4,4 @@ Tasks.md
 documents
 .tfstate
 .terraform/
+.vscode/
