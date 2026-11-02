@@ -2,3 +2,5 @@
 Tasks.md
 .env
 documents
+.tfstate
+.terraform/
