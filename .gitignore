@@ -5,3 +5,5 @@ documents
 .tfstate
 .terraform/
 .vscode/
+.pytest_cache
+**/__pycache__/
